@@ -6,52 +6,235 @@
 <title>Тон — музыка</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#14101f;--bg2:#1e1830;--tx:#f3eeff;--mu:#9b91b8;--ac:#ff5c8a;--ln:rgba(255,255,255,.09)}
-@media (prefers-color-scheme:light){:root{--bg:#f6f2ff;--bg2:#ebe4fb;--tx:#1b1530;--mu:#6d6488;--ln:rgba(0,0,0,.1)}}
+:root{
+  --bg:#0f0a1a;--bg2:#1a1428;--bg3:#241d35;
+  --tx:#f5f0ff;--tx2:#c8bfe0;--mu:#8a7fa8;
+  --ac:#ff5c8a;--ac2:#7a4dff;--ac3:#4dc8ff;
+  --ln:rgba(255,255,255,.08);--ln2:rgba(255,255,255,.15);
+  --shadow:0 8px 32px rgba(0,0,0,.4);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.5);
+  --glow:0 0 40px rgba(255,92,138,.3);
+}
+[data-theme="light"]{
+  --bg:#f8f5ff;--bg2:#efe8ff;--bg3:#e5dcf5;
+  --tx:#1a1030;--tx2:#4a3d6a;--mu:#7a6d9a;
+  --ac:#ff4080;--ac2:#6040ff;--ac3:#20a0e0;
+  --ln:rgba(0,0,0,.08);--ln2:rgba(0,0,0,.12);
+  --shadow:0 8px 32px rgba(100,80,150,.15);
+  --shadow-lg:0 20px 60px rgba(100,80,150,.2);
+  --glow:0 0 40px rgba(255,64,128,.2);
+}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--tx);font:400 15px/1.45 Manrope,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 190px}
+body{
+  background:var(--bg);color:var(--tx);
+  font:400 15px/1.5 Manrope,system-ui,sans-serif;
+  padding:env(safe-area-inset-top) 0 200px;
+  transition:background .4s ease,color .4s ease;
+  min-height:100vh;
+}
 h1,h2{font-family:Unbounded,Manrope,sans-serif}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:2px solid #5cc8ff;outline-offset:2px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;transition:all .25s ease}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ac3);outline-offset:2px}
 .wrap{max-width:720px;margin:0 auto;padding:0 18px}
-.hero{margin:14px 0 26px;border-radius:32px;background:radial-gradient(120% 90% at 50% 0%,var(--bg2),var(--bg));border:1px solid var(--ln);text-align:center;padding:14px 18px 28px}
-canvas{width:100%;height:210px;display:block}
-.hero h1{font-size:26px;letter-spacing:-.02em}
-.hero p{color:var(--mu);margin:6px 0 18px}
-.wave{background:var(--ac);color:#fff;font-weight:700;padding:14px 34px;border-radius:99px;font-size:16px;box-shadow:0 10px 30px -8px var(--ac)}
-.moods{display:flex;gap:8px;overflow-x:auto;margin-top:18px;padding-bottom:4px}
-.moods button{white-space:nowrap;padding:8px 15px;border-radius:99px;border:1px solid var(--ln);color:var(--mu);font-weight:600}
-.moods button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
-h2{font-size:17px;margin:8px 0 10px}
-.row{display:flex;align-items:center;gap:13px;padding:9px 8px;border-radius:16px;cursor:pointer}
-.row:hover,.row.cur{background:var(--bg2)}
-.cv{flex:none;width:52px;height:52px;border-radius:14px;background:var(--bg2) center/cover}
-.m{flex:1;min-width:0}.m b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Hero */
+.hero{
+  margin:14px 0 26px;border-radius:32px;
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%);
+  border:1px solid var(--ln);text-align:center;padding:14px 18px 28px;
+  box-shadow:var(--shadow);
+  animation:fadeIn .6s ease;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,var(--ac) 0%,transparent 50%);
+  opacity:.08;pointer-events:none;
+}
+canvas{width:100%;height:210px;display:block;border-radius:20px}
+.hero h1{font-size:28px;letter-spacing:-.02em;margin-top:12px;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{color:var(--mu);margin:6px 0 18px;font-size:14px}
+
+/* Wave button */
+.wave{
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  color:#fff;font-weight:700;padding:14px 34px;border-radius:99px;font-size:16px;
+  box-shadow:0 10px 30px -8px var(--ac);
+  transition:all .3s ease;position:relative;overflow:hidden;
+}
+.wave::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.wave:hover{transform:translateY(-2px);box-shadow:0 15px 40px -8px var(--ac)}
+.wave:hover::before{opacity:1}
+.wave:active{transform:translateY(0)}
+
+/* Moods */
+.moods{display:flex;gap:8px;overflow-x:auto;margin-top:18px;padding-bottom:4px;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.moods::-webkit-scrollbar{display:none}
+.moods button{
+  white-space:nowrap;padding:8px 16px;border-radius:99px;
+  border:1px solid var(--ln);color:var(--mu);font-weight:600;
+  transition:all .25s ease;
+}
+.moods button:hover{border-color:var(--ln2);color:var(--tx)}
+.moods button.on{
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 16px -4px var(--ac);
+}
+
+/* Theme toggle */
+.theme-toggle{
+  position:absolute;top:16px;right:16px;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--ln);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:all .3s ease;z-index:2;
+}
+.theme-toggle:hover{transform:rotate(180deg);background:var(--bg2)}
+
+/* Content */
+h2{font-size:18px;margin:8px 0 12px;color:var(--tx)}
+
+/* Track rows */
+.row{
+  display:flex;align-items:center;gap:13px;padding:10px 12px;
+  border-radius:16px;cursor:pointer;
+  transition:all .25s ease;
+  animation:slideIn .4s ease backwards;
+}
+.row:nth-child(1){animation-delay:.05s}
+.row:nth-child(2){animation-delay:.1s}
+.row:nth-child(3){animation-delay:.15s}
+.row:nth-child(4){animation-delay:.2s}
+.row:nth-child(5){animation-delay:.25s}
+.row:hover{background:var(--bg2);transform:translateX(4px)}
+.row.cur{background:linear-gradient(135deg,var(--bg2),var(--bg3));box-shadow:inset 0 0 0 1px var(--ac)}
+
+/* Cover */
+.cv{flex:none;width:52px;height:52px;border-radius:14px;background:var(--bg3) center/cover;
+  transition:transform .3s ease;
+}
+.row:hover .cv{transform:scale(1.05)}
+
+/* Meta */
+.m{flex:1;min-width:0}
+.m b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .m span{color:var(--mu);font-size:13px}
-.hb{font-size:20px;color:var(--mu);padding:8px}.hb.on{color:var(--ac)}
+
+/* Heart */
+.hb{font-size:22px;color:var(--mu);padding:8px;transition:all .25s ease}
+.hb:hover{transform:scale(1.2)}
+.hb.on{color:var(--ac);animation:pulse .6s ease}
+
+/* Time */
 .tm{color:var(--mu);font-size:13px;font-variant-numeric:tabular-nums}
-.sr,.key{width:100%;padding:15px 20px;border-radius:99px;border:1px solid var(--ln);background:var(--bg2);color:var(--tx);font:inherit;margin:14px 0}
-.empty{color:var(--mu);padding:22px 8px;text-align:center}
-.card{background:var(--bg2);border-radius:24px;padding:22px;margin:24px 0}
+
+/* Search */
+.sr,.key{
+  width:100%;padding:16px 22px;border-radius:99px;
+  border:1px solid var(--ln);background:var(--bg2);color:var(--tx);
+  font:inherit;margin:14px 0;
+  transition:all .3s ease;
+}
+.sr:focus,.key:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(255,92,138,.15)}
+
+/* Empty */
+.empty{color:var(--mu);padding:24px 12px;text-align:center;font-size:14px}
+
+/* Card */
+.card{
+  background:var(--bg2);border-radius:24px;padding:24px;margin:24px 0;
+  border:1px solid var(--ln);box-shadow:var(--shadow);
+  animation:fadeIn .5s ease;
+}
 .card a{color:var(--ac)}
-.nav{position:fixed;left:0;right:0;bottom:0;padding-bottom:env(safe-area-inset-bottom);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--ln);z-index:5}
-.nav .in{max-width:720px;margin:0 auto;display:flex}
-.nav button{flex:1;padding:11px 0 8px;color:var(--mu);font-weight:600;font-size:13px}
-.nav button.on{color:var(--tx)}
-.nav button::after{content:"";display:block;width:18px;height:3px;border-radius:3px;margin:4px auto 0}
-.nav button.on::after{background:var(--ac)}
-.pl{position:fixed;left:10px;right:10px;bottom:calc(58px + env(safe-area-inset-bottom));max-width:700px;margin:0 auto;z-index:6;border-radius:24px;padding:12px 14px 10px;color:#fff;background:linear-gradient(120deg,#ff5c8a,#7a4dff);box-shadow:0 18px 40px -12px rgba(0,0,0,.55)}
+
+/* Player */
+.pl{
+  position:fixed;left:10px;right:10px;bottom:calc(60px + env(safe-area-inset-bottom));
+  max-width:700px;margin:0 auto;z-index:6;
+  border-radius:24px;padding:14px 16px 12px;color:#fff;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  box-shadow:var(--shadow-lg);
+  transition:all .4s ease;
+  animation:slideUp .5s ease;
+}
 .pl .t{display:flex;align-items:center;gap:12px}
-.pl .cv{width:46px;height:46px}.pl .m span{color:rgba(255,255,255,.8)}
-.ct{display:flex;align-items:center}.ct button{font-size:20px;padding:8px 9px}
-.ct .pp{background:#fff;color:#14101f;border-radius:50%;width:46px;height:46px;font-size:18px;padding:0}
-.pg{display:flex;align-items:center;gap:9px;margin-top:6px;font-size:12px;font-variant-numeric:tabular-nums}
-.pg input{flex:1;accent-color:#fff}
+.pl .cv{width:48px;height:48px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.pl .m span{color:rgba(255,255,255,.85)}
+.ct{display:flex;align-items:center}
+.ct button{font-size:20px;padding:8px 10px;transition:transform .2s ease}
+.ct button:hover{transform:scale(1.15)}
+.ct .pp{
+  background:#fff;color:var(--bg);border-radius:50%;
+  width:48px;height:48px;font-size:18px;padding:0;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.ct .pp:hover{transform:scale(1.1)}
+.pg{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12px;font-variant-numeric:tabular-nums}
+.pg input{flex:1;accent-color:#fff;height:4px}
+
+/* Nav */
+.nav{
+  position:fixed;left:0;right:0;bottom:0;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--ln);z-index:5;
+}
+.nav .in{max-width:720px;margin:0 auto;display:flex}
+.nav button{
+  flex:1;padding:12px 0 10px;color:var(--mu);font-weight:600;font-size:13px;
+  transition:color .25s ease;position:relative;
+}
+.nav button:hover{color:var(--tx)}
+.nav button.on{color:var(--tx)}
+.nav button::after{
+  content:"";display:block;width:20px;height:3px;border-radius:3px;
+  margin:5px auto 0;background:transparent;transition:all .3s ease;
+}
+.nav button.on::after{background:linear-gradient(90deg,var(--ac),var(--ac2));width:28px}
+
+/* Responsive */
+@media (max-width:480px){
+  .hero h1{font-size:24px}
+  .hero p{font-size:13px}
+  .wave{padding:12px 28px;font-size:15px}
+  .row{padding:8px 10px;gap:10px}
+  .cv{width:46px;height:46px}
+  .pl{left:8px;right:8px;padding:12px 14px 10px}
+  .pl .cv{width:42px;height:42px}
+}
+@media (min-width:768px){
+  .hero h1{font-size:32px}
+  .row{padding:12px 16px}
+}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Loading */
+.loading{display:inline-block;width:20px;height:20px;border:2px solid var(--ln);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 <div class="wrap">
   <section class="hero" id="hero">
+    <button class="theme-toggle" id="themeBtn" aria-label="Сменить тему">🌙</button>
     <canvas id="cv" width="640" height="420"></canvas>
     <h1>Моя волна</h1>
     <p id="sub">Легальная музыка независимых артистов со всего мира</p>
@@ -76,17 +259,26 @@ h2{font-size:17px;margin:8px 0 10px}
 </div></nav>
 
 <script>
-/* 1. Вставьте свой client_id с https://devportal.jamendo.com или введите его на странице */
 const CLIENT_ID = "";
-
 const API = "https://api.jamendo.com/v3.0/tracks/";
-const MOODS = {"Все":"","Бодрость":"energetic","Фокус":"ambient","Расслабление":"relaxing","Ночь":"lounge","Рок":"rock","Электроника":"electronic"};
+const MOODS = {"Все":"","Бодрость":"energetic","Фокус":"ambient","Расслабление":"relaxing","Ночь":"lounge","Рок":"rock","Электроника":"electronic","Джаз":"jazz","Классика":"classical","Хип-хоп":"hiphop","Инди":"indie","Метал":"metal","Фолк":"folk","Поп":"pop"};
 const au = new Audio();
 const $ = id => document.getElementById(id);
 const fmt = s => isFinite(s) ? Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0") : "0:00";
 const ls = { get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}, set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}} };
 
 let key = CLIENT_ID || ls.get("ton-key",""), mood = "Все", view = "home", list = [], queue = [], cur = -1, radio = false, favs = ls.get("ton-favs",{});
+
+// Theme
+let theme = ls.get("ton-theme", "dark");
+document.documentElement.setAttribute("data-theme", theme);
+$("themeBtn").textContent = theme === "dark" ? "🌙" : "☀️";
+$("themeBtn").onclick = () => {
+  theme = theme === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", theme);
+  $("themeBtn").textContent = theme === "dark" ? "🌙" : "☀️";
+  ls.set("ton-theme", theme);
+};
 
 async function load(params){
   if(!key) return [];
@@ -113,7 +305,7 @@ async function render(){
     return;
   }
   if(view==="home"){
-    v.innerHTML = '<h2>'+(mood==="Все"?"Популярное на этой неделе":mood)+'</h2><p class="empty">Загружаем…</p>';
+    v.innerHTML = '<h2>'+(mood==="Все"?"Популярное на этой неделе":mood)+'</h2><p class="empty"><span class="loading"></span></p>';
     try{ list = await feed(); }catch(e){ v.innerHTML='<p class="empty">Не удалось загрузить каталог: '+esc(e.message)+'. Проверьте ключ и интернет.</p>'; return }
     v.innerHTML = '<h2>'+(mood==="Все"?"Популярное на этой неделе":mood)+'</h2>'+rows(list);
   } else if(view==="search"){
@@ -162,7 +354,7 @@ document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { view=b
 $("moods").innerHTML = Object.keys(MOODS).map(m=>`<button class="${m===mood?"on":""}">${m}</button>`).join("");
 $("moods").onclick = e => { const b=e.target.closest("button"); if(!b) return; mood=b.textContent; radio=false; list=[]; $("moods").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); render() };
 
-/* Визуализатор: анимация «капли», пока играет музыка */
+/* Визуализатор */
 const c=$("cv"),g=c.getContext("2d");let ph=0,amp=0;
 (function draw(){
   requestAnimationFrame(draw); if(view!=="home") return;
